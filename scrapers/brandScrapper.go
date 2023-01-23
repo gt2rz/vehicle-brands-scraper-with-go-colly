@@ -1,6 +1,10 @@
 package scrapers
 
 import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
 	"time"
 	"vehicle-brands-scrapper-with-go/utils"
 
@@ -12,12 +16,30 @@ type CarBrand struct {
 	Name string `json:"name"`
 }
 
-func Brands(url string) []CarBrand {
+type Config struct {
+	Urls ConfigBrands `json:"urls"`
+}
+
+type ConfigBrands struct {
+	Brands string `json:"brands"`
+}
+
+func Brands() []CarBrand {
 	start := time.Now()
 	utils.ConsoleLog("Starting the brand scraper...")
 
 	data := []CarBrand{}
 	var index uint16 = 1
+	configuration := Config{}
+
+	config, err := os.ReadFile("./scrapers/config.json")
+	if err != nil {
+		fmt.Println("Error reading config file: ", err)
+		log.Fatal(err)
+	}
+
+	json.Unmarshal(config, &configuration)
+	url := configuration.Urls.Brands
 
 	c := colly.NewCollector()
 
