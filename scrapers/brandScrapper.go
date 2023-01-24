@@ -1,10 +1,7 @@
 package scrapers
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
-	"os"
 	"time"
 	"vehicle-brands-scrapper-with-go/utils"
 
@@ -16,36 +13,28 @@ type CarBrand struct {
 	Name string `json:"name"`
 }
 
-type Config struct {
-	Urls ConfigBrands `json:"urls"`
-}
-
-type ConfigBrands struct {
-	Brands string `json:"brands"`
-}
-
 func Brands() []CarBrand {
 	start := time.Now()
 	utils.ConsoleLog("Starting the brand scraper...")
 
 	data := []CarBrand{}
 	var index uint16 = 1
-	configuration := Config{}
 
-	config, err := os.ReadFile("./scrapers/config.json")
+	// Get brands config to scrape from config.json
+	config, err := GetConfig()
 	if err != nil {
 		fmt.Println("Error reading config file: ", err)
-		log.Fatal(err)
 	}
 
-	json.Unmarshal(config, &configuration)
-	url := configuration.Urls.Brands
+	url := config.Scraping.Brands.Url
+	element := config.Scraping.Brands.Element
 
+	// Scrape the brands
 	c := colly.NewCollector()
 
 	utils.ConsoleLog("Scraping:", url)
 
-	c.OnHTML("a.link_grey", func(e *colly.HTMLElement) {
+	c.OnHTML(element, func(e *colly.HTMLElement) {
 		data = append(data, CarBrand{
 			Id:   index,
 			Name: e.Text,

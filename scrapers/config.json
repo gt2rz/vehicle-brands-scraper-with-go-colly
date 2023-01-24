@@ -1,5 +1,8 @@
 {
-    "urls":{
-        "brands":"https://www.car.info/en-se/brands"
-    }    
+    "scraping":{
+        "brands":{
+            "url":"https://www.car.info/en-se/brands",
+            "element":"a.link_grey"
+        }    
+    }
 }
