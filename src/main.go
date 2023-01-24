@@ -6,7 +6,6 @@ import (
 	"vehicle-brands-scrapper-with-go/utils"
 )
 
-
 func main() {
 
 	data := scrapers.Brands()
